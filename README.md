@@ -10,7 +10,7 @@ We present a novel GPU-based mesh optimization pipeline with three core componen
 2. Robust parallel simplification: Reduces mesh complexity with guaranteed intersection-free results.
 3. Optimization-based safe projection: Realigns the simplified mesh to the original input, eliminating surface shifts from remeshing and restoring sharp features.
 
-Our approach is highly efficient, simplifying a 2-million-face mesh to 20k triangles in just 3 seconds on an RTX 4090.
+Our approach is highly efficient, simplifying a 2-million-face mesh to 2k triangles in just 3 seconds on an RTX 4090.
 
 
 ![teaser](teaser.png)
