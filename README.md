@@ -1,15 +1,21 @@
 # PaMO: Parallel Mesh Optimization for Intersection-Free Low-Poly Modeling on the GPU [PG2025]
 
 *Seonghun Oh\*, Xiaodi Yuan\*, Xinyue Wei\*, Ruoxi Shi, Fanbo Xiang, Minghua Liu, Hao Su*
-<br>[[Project Page]](https://seonghunn.github.io/pamo/)
+<br>[[Project Page]](https://seonghunn.github.io/pamo/) [[Paper]](https://arxiv.org/abs/2509.05595)
 
 ## Intro
+
 We present a novel GPU-based mesh optimization pipeline with three core components:
 1. Parallel remeshing: Converts arbitrary meshes into watertight, manifold, and intersection-free meshes while improving triangle quality.
 2. Robust parallel simplification: Reduces mesh complexity with guaranteed intersection-free results.
 3. Optimization-based safe projection: Realigns the simplified mesh to the original input, eliminating surface shifts from remeshing and restoring sharp features.
 
 Our approach is highly efficient, simplifying a 2-million-face mesh to 20k triangles in just 3 seconds on an RTX 4090.
+
+
+![teaser](teaser.png)
+Left: Reducing the 2M-face “crab” to 0.1% in 2.29s. Right: Reducing the 7M-face “dragon” to 0.1% in 5.32s. (Only the output
+meshes are shown above; qem [1], rolopm [2]).
 
 ## Installation
 ### Option 1: Docker environment
@@ -72,6 +78,11 @@ pamo.run(points, triangles, ratio, tolerance=4, threshold=1e-3, iter=100000)
 **use_stage3** (`bool`, *default = True*): Whether to use a safe projection (stage 3) after simplification.
 
 **tolerance** (`int`, *default = 4*): Defines the number of iterations to run without edge collapses before stopping, accumulating invalid edges that do not qualify for collapsing. Lower values quicken termination, while higher values allow more iterations for potential optimization
+
+## References
+[1] Jiang, Zhongshi, et al. "Declarative Specification for Unstructured Mesh Editing Algorithms." ACM Trans. Graph. 41.6 (2022): 251-1.
+
+[2] Chen, Zhen, et al. "Robust low-poly meshing for general 3d models." ACM Transactions on Graphics (TOG) 42.4 (2023): 1-20.
 
 ## Cite
 ```
