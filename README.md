@@ -86,10 +86,12 @@ pamo.run(points, triangles, ratio, tolerance=4, threshold=1e-3, iter=100000)
 
 ## Cite
 ```
-@article{oh2025pamo,
+@inproceedings{oh2025pamo,
   title={PaMO: Parallel Mesh Optimization for Intersection-Free Low-Poly Modeling on the GPU},
   author={Oh, Seonghun and Yuan, Xiaodi and Wei, Xinyue and Shi, Ruoxi and Xiang, Fanbo and Liu, Minghua and Su, Hao},
-  journal={arXiv preprint arXiv:2509.05595},
-  year={2025}
+  booktitle={Computer Graphics Forum},
+  pages={e70267},
+  year={2025},
+  organization={Wiley Online Library}
 }
 ```
