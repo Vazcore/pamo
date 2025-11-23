@@ -82,40 +82,13 @@ class PaMO(nn.Module):
         d = torchcumesh2sdf.get_sdf(tris, self.R, self.band)
         d = d - 0.9 / self.R
         
-        v, f = self.vol2mesh(d, return_quads=True) #Dual MC
+        v, f = self.vol2mesh(d, return_quads=False) #Dual MC
 
         v, f = v.cpu().numpy(), f.cpu().numpy()
         v = (((v * self.R +0.5)/(self.R+1)* self.margin - self.band) * tris_max + tris_min)
         
         v = torch.from_numpy(v).float().cuda()
         f = torch.from_numpy(f).int().cuda()
-        # divide the quad into two triangles maximize the smallest angle within each triangle
-        face_config1 = torch.tensor([[0, 1, 3], [1, 2, 3]])
-        face_config2 = torch.tensor([[0, 1, 2], [0, 2, 3]])
-        angles1, angles2 = [], []
-        
-        for i in range(len(face_config1)):
-            v0, v1, v2 = torch.unbind(v[f[:, face_config1[i]]], dim=-2)
-            cos1 = (F.normalize(v1-v0, dim=-1) * F.normalize(v2-v0, dim=-1)).sum(-1)
-            cos2 = (F.normalize(v2-v1, dim=-1) * F.normalize(v0-v1, dim=-1)).sum(-1)
-            cos3 = (F.normalize(v0-v2, dim=-1) * F.normalize(v1-v2, dim=-1)).sum(-1)
-            angles1.append(torch.max(torch.stack([cos1, cos2, cos3], dim=-1), dim=-1)[0])
-        for i in range(len(face_config2)):
-            v0, v1, v2 = torch.unbind(v[f[:, face_config2[i]]], dim=-2)
-            cos1 = (F.normalize(v1-v0, dim=-1) * F.normalize(v2-v0, dim=-1)).sum(-1)
-            cos2 = (F.normalize(v2-v1, dim=-1) * F.normalize(v0-v1, dim=-1)).sum(-1)
-            cos3 = (F.normalize(v0-v2, dim=-1) * F.normalize(v1-v2, dim=-1)).sum(-1)
-            angles2.append(torch.max(torch.stack([cos1, cos2, cos3], dim=-1), dim=-1)[0])
-
-        angles1 = torch.stack(angles1, dim=-1)
-        angles2 = torch.stack(angles2, dim=-1)
-
-        angles1 = torch.max(angles1, dim=1)[0]
-        angles2 = torch.max(angles2, dim=1)[0]
-
-        faces_1 = f[angles1 < angles2]
-        faces_2 = f[angles1 >= angles2]
-        f = torch.cat([faces_1[:, [0, 1, 3, 1, 2, 3]].view(-1, 3), faces_2[:, [0, 1, 2, 0, 2, 3]].view(-1, 3)], dim=0)
         
         return v, f
 
